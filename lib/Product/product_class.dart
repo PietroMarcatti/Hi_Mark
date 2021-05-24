@@ -1,4 +1,4 @@
 class Product {
-  Product(this.name, this.code);
-  String name, code;
+  Product({this.code = 0});
+  int code;
 }
