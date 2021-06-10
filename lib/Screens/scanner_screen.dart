@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
+import '../Components/rounded_button.dart';
+import 'lists_screen.dart';
+import 'lists_screen.dart';
+
 class ScannerScreen extends StatefulWidget {
   static const String id = 'scanner_screen';
   @override
@@ -12,6 +16,7 @@ class ScannerScreen extends StatefulWidget {
 
 class _ScannerScreenState extends State<ScannerScreen> {
   String _scanBarcode = 'Unknown';
+  bool isVisible = false;
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -32,6 +37,45 @@ class _ScannerScreenState extends State<ScannerScreen> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+    _displayTextInputDialog(context);
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    bool isEmpty = true;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Scanned Product'),
+            content: Text(_scanBarcode),
+            actions: <Widget>[
+              Row(
+                children: [
+                  RoundedButton(
+                    colour: Colors.lightBlueAccent,
+                    title: 'Insert into existing list',
+                    onPressed: () {
+                      setState(() {
+                        Navigator.pop(context);
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  RoundedButton(
+                    colour: Colors.lightBlue,
+                    title: 'Create new list',
+                    onPressed: () async {
+                      Navigator.pushNamed(context, ListsScreen.id,
+                          arguments: _scanBarcode);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
   }
 
   @override
